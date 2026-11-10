@@ -2,14 +2,17 @@ import React, { useState } from 'react'
 import dummyAIResposeObject from "./DummyAIResposeObject"
 import AISuggestions from "./AISuggestions"
 import LiveTranscript from './LiveTranscript';
-import dummyLiveTranscriptObject, {quickResponses} from './DummyLiveTranscripObject';
+import {quickResponses} from './DummyLiveTranscripObject';
+import { useTranscriptSocket } from './useTranscriptSocket';
 
 const TopMenuBar = () => {
-  const [keys, setKeys] = useState(
-    ["AI Suggestions",
-    "Transcript"
-    ]
-  );
+    const [keys, setKeys] = useState(
+        ["AI Suggestions",
+        "Transcript"
+        ]
+    );
+
+    const { segments, callEnded, connected, replaced } = useTranscriptSocket('agent-1');   // hardcoded until auth exists
 
     const [selectedKey, setSelectedKey] = useState("AI Suggestions");
 
@@ -34,7 +37,7 @@ const TopMenuBar = () => {
             
                 <div className="bg-canvas px-5 pb-5 rounded-b-xl">
                     {
-                        (selectedKey==="AI Suggestions") ? <AISuggestions aiSuggestionsArray={dummyAIResposeObject.suggestions} /> : <LiveTranscript dummyLiveTranscriptObject = {dummyLiveTranscriptObject} quickResponses = {quickResponses} />
+                        (selectedKey==="AI Suggestions") ? <AISuggestions aiSuggestionsArray={dummyAIResposeObject.suggestions} /> : <LiveTranscript segments={segments} connected={connected} callEnded={callEnded} replaced={replaced} quickResponses={quickResponses} />
                     }
                 </div>
             </div>
